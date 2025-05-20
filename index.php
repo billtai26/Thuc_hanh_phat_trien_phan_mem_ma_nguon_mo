@@ -10,6 +10,9 @@ $url = explode('/', $url);
 // Kiểm tra phần đầu tiên của URL để xác định controller
 $controllerName = isset($url[0]) && $url[0] != '' ? ucfirst($url[0]) . 'Controller' : 'DefaultController';
 
+// Fix tên file controller nếu có dấu chấm thừa
+$controllerFileName = str_replace('..php', '.php', $controllerName . '.php');
+
 // Kiểm tra phần thứ hai của URL để xác định action
 $action = isset($url[1]) && $url[1] != '' ? $url[1] : 'index';
 // die ("controller=$controllerName - action=$action");// Kiểm tra xem controller và action có tồn tại không

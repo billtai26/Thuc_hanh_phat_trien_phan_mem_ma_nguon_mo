@@ -106,15 +106,41 @@ class ProductController
         echo "Đã xảy ra lỗi khi lưu sản phẩm.";
       }
     }
-  }
-  public function delete($id)
+  }  public function delete($id)
   {
     if ($this->productModel->deleteProduct($id)) {
+      $_SESSION['success'] = "Xóa sản phẩm thành công!";
       header('Location: /webbanhang/Product');
     } else {
-      echo "Đã xảy ra lỗi khi xóa sản phẩm.";
+      $_SESSION['error'] = "Đã xảy ra lỗi khi xóa sản phẩm.";
+      header('Location: /webbanhang/Product');
     }
+    exit();
   }
+  public function search()
+  {
+    if (isset($_GET['keyword'])) {
+      $keyword = $_GET['keyword'];
+      $products = $this->productModel->searchProducts($keyword);
+      
+      // Trả về kết quả dưới dạng JSON
+      header('Content-Type: application/json');
+      echo json_encode([
+        'success' => true,
+        'products' => $products
+      ]);
+      exit();
+    }
+    
+    // Nếu không có từ khóa, trả về lỗi
+    header('Content-Type: application/json');
+    echo json_encode([
+      'success' => false,
+      'message' => 'Không có từ khóa tìm kiếm'
+    ]);
+    exit();
+  }
+
   private function uploadImage($file)
   {
     $target_dir = "uploads/";
@@ -124,15 +150,19 @@ class ProductController
     }
     $target_file = $target_dir . basename($file["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    
     // Kiểm tra xem file có phải là hình ảnh không
     $check = getimagesize($file["tmp_name"]);
     if ($check === false) {
       throw new Exception("File không phải là hình ảnh.");
     }
+
     // Kiểm tra kích thước file (10 MB = 10 * 1024 * 1024 bytes)
     if ($file["size"] > 10 * 1024 * 1024) {
       throw new Exception("Hình ảnh có kích thước quá lớn.");
-    } // Chỉ cho phép một số định dạng hình ảnh nhất định
+    } 
+    
+    // Chỉ cho phép một số định dạng hình ảnh nhất định
     if (
       $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType !=
       "jpeg" && $imageFileType != "gif"

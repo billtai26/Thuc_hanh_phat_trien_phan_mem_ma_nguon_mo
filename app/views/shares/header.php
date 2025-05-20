@@ -5,16 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sản phẩm</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">    <style>
         body {
             background-color: #f8f9fa;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        body.page-transition {
+            opacity: 0;
         }
         .navbar {
-            background-color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.98) !important;
             box-shadow: 0 2px 4px rgba(0,0,0,.1);
             padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
+        
+        /* Thêm padding-top cho body để tránh content bị che khuất bởi navbar */
+        body {
+            padding-top: 80px;
+        }
+        
+        /* Hiệu ứng khi scroll */
+        .navbar.scrolled {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,.1);
+            backdrop-filter: blur(10px);
+        }
+        
         .navbar-brand {
             font-weight: bold;
             color: #2c3e50 !important;
@@ -119,22 +143,57 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            </button>            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/webbanhang/Product/">
-                            <i class="fas fa-list mr-1"></i>Danh sách sản phẩm
+                            <i class="fas fa-box mr-1"></i>Sản phẩm
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/webbanhang/Product/add">
-                            <i class="fas fa-plus mr-1"></i>Thêm sản phẩm
+                        <a class="nav-link" href="/webbanhang/Category">
+                            <i class="fas fa-tags mr-1"></i>Danh mục
                         </a>
                     </li>
-                </ul>
-            </div>
+                </ul>            </div>
         </div>
-    </nav>
+    </nav>    <script>
+        // Xử lý hiệu ứng scroll cho navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Xử lý hiệu ứng chuyển trang
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lấy tất cả các liên kết trong nav
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // Ngăn chặn hành vi mặc định
+                    const targetUrl = this.getAttribute('href'); // Lấy URL đích
+                    
+                    // Thêm class để fade out
+                    document.body.classList.add('page-transition');
+                    
+                    // Đợi animation kết thúc rồi mới chuyển trang
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 300); // Thời gian bằng với transition trong CSS
+                });
+            });
+            
+            // Xử lý khi trang mới load
+            window.addEventListener('pageshow', function(event) {
+                document.body.classList.remove('page-transition');
+            });
+        });
+    </script>
+
     <div class="container">
         <div class="main-content">
