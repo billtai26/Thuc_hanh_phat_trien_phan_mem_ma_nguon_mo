@@ -24,13 +24,14 @@
     </div>
 <?php endif; ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="text-primary">
+<div class="d-flex justify-content-between align-items-center mb-4">    <h1 class="text-primary">
         <i class="fas fa-tags mr-2"></i>Danh sách danh mục
     </h1>
-    <a href="/webbanhang/Category/add" class="btn btn-primary">
-        <i class="fas fa-plus mr-2"></i>Thêm danh mục mới
-    </a>
+    <?php if (SessionHelper::isAdmin()): ?>
+        <a href="/webbanhang/Category/add" class="btn btn-primary">
+            <i class="fas fa-plus mr-2"></i>Thêm danh mục mới
+        </a>
+    <?php endif; ?>
 </div>
 
 <div class="card">
@@ -55,16 +56,17 @@
                                 <span class="badge badge-primary">
                                     <?php echo $category->product_count; ?> sản phẩm
                                 </span>
-                            </td>
-                            <td>
-                                <a href="/webbanhang/Category/edit/<?php echo $category->id; ?>" 
-                                   class="btn btn-sm btn-outline-primary mr-2">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button class="btn btn-sm btn-outline-danger" 
-                                        onclick="confirmDelete(<?php echo $category->id; ?>, '<?php echo htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8'); ?>')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            </td>                            <td>
+                                <?php if (SessionHelper::isAdmin()): ?>
+                                    <a href="/webbanhang/Category/edit/<?php echo $category->id; ?>" 
+                                       class="btn btn-sm btn-outline-primary mr-2">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger" 
+                                            onclick="confirmDelete(<?php echo $category->id; ?>, '<?php echo htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8'); ?>')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

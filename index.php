@@ -1,6 +1,11 @@
 <?php
 
+session_start();
+
+require_once 'app/config/database.php';
 require_once 'app/models/ProductModel.php';
+require_once 'app/helpers/SessionHelper.php';
+require_once 'app/models/CartModel.php';
 
 $url = $_GET['url'] ?? '';
 $url = rtrim($url, '/');

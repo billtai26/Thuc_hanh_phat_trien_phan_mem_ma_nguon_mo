@@ -40,8 +40,7 @@
                         <p class="product-description">
                             <?php echo nl2br(htmlspecialchars($product->description, ENT_QUOTES, 'UTF-8')); ?>
                         </p>
-                    </div>
-
+                    </div>                    
                     <div class="mb-4">
                         <h5 class="text-muted mb-2">Danh mục:</h5>
                         <span class="badge badge-primary p-2">
@@ -49,6 +48,17 @@
                             <?php echo htmlspecialchars($product->category_name, ENT_QUOTES, 'UTF-8'); ?>
                         </span>
                     </div>
+
+                    <form action="/webbanhang/Cart/add" method="post" class="mb-4">
+                        <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
+                        <div class="form-group mb-3">
+                            <label for="quantity">Số lượng:</label>
+                            <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" style="width: 100px;">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-shopping-cart mr-2"></i> Thêm vào giỏ hàng
+                        </button>
+                    </form>
 
                     <div class="border-top pt-4">
                         <div class="row">

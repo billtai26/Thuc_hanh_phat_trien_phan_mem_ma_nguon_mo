@@ -5,16 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sản phẩm</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">    <style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --transition-speed: 0.3s;
+        }
+
         body {
             background-color: #f8f9fa;
-            opacity: 1;
-            transition: opacity 0.3s ease-in-out;
+        }
+
+        .transition {
+            transition: all var(--transition-speed) ease;
+        }
+
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            line-height: 1.4;
+            margin-right: 0.5rem;
+            flex: 1;
+        }
+
+        .badge {
+            padding: 0.5em 0.8em;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .bg-info {
+            background-color: #ffeaa7 !important;
+            color: #2d3436 !important;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .btn-sm {
+            padding: .375rem .75rem;
+        }
+
+        .gap-2 {
+            gap: .5rem;
+        }
+
+        .flex-grow-1 {
+            flex: 1;
+        }
+
+        /* Existing navbar styles */
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            min-width: 1.5rem;
+            text-align: center;
+        }
+
+        /* Nút thêm vào giỏ hàng */
+        .btn-sm.w-100 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1;
+        }
+
+        .btn-sm.w-100 i {
+            margin-right: 0.3rem;
         }
         
-        body.page-transition {
-            opacity: 0;
+        .cart-icon {
+            position: relative;
+            font-size: 1.2rem;
         }
+        
         .navbar {
             background-color: rgba(255, 255, 255, 0.98) !important;
             box-shadow: 0 2px 4px rgba(0,0,0,.1);
@@ -24,12 +102,11 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
         }
         
-        /* Thêm padding-top cho body để tránh content bị che khuất bởi navbar */
+        /* Add padding-top to body to prevent content from being hidden under fixed navbar */
         body {
-            padding-top: 80px;
+            padding-top: 76px;
         }
         
         /* Hiệu ứng khi scroll */
@@ -50,8 +127,17 @@
             margin: 0 10px;
             transition: color 0.3s;
         }
-        .nav-link:hover {
-            color: #3498db !important;
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.5rem;
+        }
+        
+        
+        @media (max-width: 991.98px) {
+            .cart-link {
+                margin-top: 1rem;
+            }
         }
         .main-content {
             background-color: #fff;
@@ -131,69 +217,130 @@
         .btn-primary:hover::before {
             left: 100%;
         }
+        .btn-outline-warning, .btn-outline-danger {
+            padding: 0.4rem;
+            line-height: 1;
+            width: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-outline-warning:hover, .btn-outline-danger:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-danger {
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-outline-danger:active {
+            transform: translateY(0);
+        }
+
+        .btn-success {
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-success:active {
+            transform: translateY(0);
+        }
+
+        /* Thêm hiệu ứng cho tooltip */
+        .tooltip {
+            font-size: 0.875rem;
+        }
+
+        .tooltip .tooltip-inner {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 6px 12px;
+            border-radius: 4px;
+        }
+
+        /* ...existing code... */
     </style>
 </head>
 
 <body>    
-  <nav class="navbar navbar-expand-lg navbar-light mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="/webbanhang/Product/">
-                <i class="fas fa-store mr-2"></i>Quản lý sản phẩm
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/webbanhang/Product/">
-                            <i class="fas fa-box mr-1"></i>Sản phẩm
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/webbanhang/Category">
-                            <i class="fas fa-tags mr-1"></i>Danh mục
-                        </a>
-                    </li>
-                </ul>            </div>
-        </div>
-    </nav>    <script>
-        // Xử lý hiệu ứng scroll cho navbar
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 20) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/webbanhang/Product">Quản lý sản phẩm</a>
 
-        // Xử lý hiệu ứng chuyển trang
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lấy tất cả các liên kết trong nav
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault(); // Ngăn chặn hành vi mặc định
-                    const targetUrl = this.getAttribute('href'); // Lấy URL đích
-                    
-                    // Thêm class để fade out
-                    document.body.classList.add('page-transition');
-                    
-                    // Đợi animation kết thúc rồi mới chuyển trang
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 300); // Thời gian bằng với transition trong CSS
-                });
-            });
-            
-            // Xử lý khi trang mới load
-            window.addEventListener('pageshow', function(event) {
-                document.body.classList.remove('page-transition');
-            });
-        });
-    </script>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <?php if (SessionHelper::isLoggedIn()): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/webbanhang/Product">
+                        <i class="fas fa-box mr-1"></i>Sản phẩm
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/webbanhang/Category">
+                        <i class="fas fa-tags mr-1"></i>Danh mục
+                    </a>
+                </li>
+            <?php endif; ?>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <?php
+                if (SessionHelper::isLoggedIn()) {
+                    echo "<a class='nav-link'><i class='fas fa-user mr-1'></i>" . htmlspecialchars($_SESSION['username']) . " (" . SessionHelper::getRole() . ")</a>";
+                } else {
+                    echo "<a class='nav-link' href='/webbanhang/account/login'><i class='fas fa-sign-in-alt mr-1'></i>Đăng nhập</a>";
+                }
+                ?>
+            </li>
+            <li class="nav-item">
+                <?php
+                if (SessionHelper::isLoggedIn()) {
+                    echo "<a class='nav-link' href='/webbanhang/account/logout'>Đăng xuất</a>";
+                }
+                ?>
+            </li>
+            <!-- Thêm nút giỏ hàng -->
+            <li class="nav-item">
+                <a href="/webbanhang/Cart" class="nav-link cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                        <span class="cart-count"><?php echo count($_SESSION['cart']); ?></span>
+                    <?php endif; ?>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-4">
+    <!-- Thêm padding-top để tránh nội dung bị che bởi navbar -->
+    <div style="padding-top: 70px;">
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger">
+                <?php 
+                    echo $_SESSION['error'];
+                    unset($_SESSION['error']);
+                ?>
+            </div>
+        <?php endif; ?>
 
-    <div class="container">
-        <div class="main-content">
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success">
+                <?php 
+                    echo $_SESSION['success'];
+                    unset($_SESSION['success']);
+                ?>
+            </div>
+        <?php endif; ?>

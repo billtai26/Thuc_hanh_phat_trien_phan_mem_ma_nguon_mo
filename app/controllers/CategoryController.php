@@ -1,6 +1,7 @@
 <?php
 require_once('app/config/database.php');
 require_once('app/models/CategoryModel.php');
+require_once('app/helpers/SessionHelper.php');
 
 class CategoryController
 {
@@ -15,17 +16,33 @@ class CategoryController
 
   public function index()
   {
+    if (!SessionHelper::isLoggedIn()) {
+      $_SESSION['error'] = "Bạn cần đăng nhập để xem danh mục.";
+      header('Location: /webbanhang/account/login');
+      exit();
+    }
     $categories = $this->categoryModel->getCategories();
     include 'app/views/category/list.php';
   }
 
   public function add()
   {
+    if (!SessionHelper::isAdmin()) {
+      $_SESSION['error'] = "Bạn không có quyền thêm danh mục.";
+      header('Location: /webbanhang/Category');
+      exit();
+    }
     include 'app/views/category/add.php';
   }
 
   public function save()
   {
+    if (!SessionHelper::isAdmin()) {
+      $_SESSION['error'] = "Bạn không có quyền thêm danh mục.";
+      header('Location: /webbanhang/Category');
+      exit();
+    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $name = $_POST['name'] ?? '';
       $description = $_POST['description'] ?? '';
@@ -45,6 +62,12 @@ class CategoryController
 
   public function edit($id)
   {
+    if (!SessionHelper::isAdmin()) {
+      $_SESSION['error'] = "Bạn không có quyền sửa danh mục.";
+      header('Location: /webbanhang/Category');
+      exit();
+    }
+
     $category = $this->categoryModel->getCategoryById($id);
     if ($category) {
       include 'app/views/category/edit.php';
@@ -57,6 +80,12 @@ class CategoryController
 
   public function update()
   {
+    if (!SessionHelper::isAdmin()) {
+      $_SESSION['error'] = "Bạn không có quyền sửa danh mục.";
+      header('Location: /webbanhang/Category');
+      exit();
+    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $id = $_POST['id'];
       $name = $_POST['name'];
@@ -78,6 +107,12 @@ class CategoryController
 
   public function delete($id)
   {
+    if (!SessionHelper::isAdmin()) {
+      $_SESSION['error'] = "Bạn không có quyền xóa danh mục.";
+      header('Location: /webbanhang/Category');
+      exit();
+    }
+
     if ($this->categoryModel->deleteCategory($id)) {
       $_SESSION['success'] = "Xóa danh mục thành công!";
     } else {
