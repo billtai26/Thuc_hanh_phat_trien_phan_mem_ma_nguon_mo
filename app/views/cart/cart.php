@@ -1,7 +1,7 @@
 <?php include 'app/views/shares/header.php'; ?>
 
-<div class="container mt-4">
-    <h1>Giỏ hàng</h1>
+<div class="container" style="margin-top: 0;">
+    <h1 class="mb-2">Giỏ hàng</h1>
     
     <?php if (!empty($cartItems)): ?>
         <div class="card mb-4">

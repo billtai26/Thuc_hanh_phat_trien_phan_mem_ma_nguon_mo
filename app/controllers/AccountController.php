@@ -55,10 +55,10 @@ class AccountController
     }
   }
   public function logout()
-  {
-    session_start();
+  {    session_start();
     unset($_SESSION['username']);
     unset($_SESSION['role']);
+    unset($_SESSION['user_id']);
     header('Location: /webbanhang/product');
     exit;
   }
@@ -69,10 +69,11 @@ class AccountController
       $password = $_POST['password'] ?? '';
       $account = $this->accountModel->getAccountByUsername($username);
       if ($account && password_verify($password, $account->password)) {
-        session_start();
+        session_start();        
         if (!isset($_SESSION['username'])) {
           $_SESSION['username'] = $account->username;
           $_SESSION['role'] = $account->role;
+          $_SESSION['user_id'] = $account->id;
         }
         header('Location: /webbanhang/product');
         exit;

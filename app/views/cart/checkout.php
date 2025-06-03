@@ -1,6 +1,6 @@
 <?php include 'app/views/shares/header.php'; ?>
 
-<div class="container mt-4">
+<div class="container-fluid px-4 mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
