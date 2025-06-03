@@ -86,9 +86,13 @@ class CartController {
         $_SESSION['success'] = 'Giỏ hàng đã được xóa!';
         header('Location: /webbanhang/Cart');
         exit;
-    }
+    }    public function checkout() {
+        if (!SessionHelper::isLoggedIn()) {
+            $_SESSION['error'] = 'Vui lòng đăng nhập để tiếp tục thanh toán!';
+            header('Location: /webbanhang/account/login');
+            exit;
+        }
 
-    public function checkout() {
         $cartItems = $this->cartModel->getCartItems();
         $total = $this->cartModel->getCartTotal();
         
@@ -96,6 +100,29 @@ class CartController {
             $_SESSION['error'] = 'Giỏ hàng của bạn đang trống!';
             header('Location: /webbanhang/Cart');
             exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once('app/models/OrderModel.php');
+            $orderModel = new OrderModel();
+            
+            try {
+                $userId = $_SESSION['user_id'];
+                $orderId = $orderModel->createOrder($userId, $total, $cartItems);
+                
+                if ($orderId) {
+                    // Clear the cart after successful order
+                    $this->cartModel->emptyCart();
+                    
+                    $_SESSION['success'] = 'Đặt hàng thành công!';
+                    header('Location: /webbanhang/Order/detail/' . $orderId);
+                    exit;
+                }
+            } catch (Exception $e) {
+                $_SESSION['error'] = 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!';
+                header('Location: /webbanhang/Cart');
+                exit;
+            }
         }
 
         require_once 'app/views/shares/header.php';
@@ -122,11 +149,15 @@ class CartController {
         try {
             $this->db->beginTransaction();
 
+            // Get user_id if user is logged in
+            $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
             // Lưu thông tin đơn hàng cơ bản
-            $query = "INSERT INTO orders (name, phone, address, created_at) 
-                     VALUES (:name, :phone, :address, NOW())";
+            $query = "INSERT INTO orders (user_id, name, phone, address, created_at) 
+                     VALUES (:user_id, :name, :phone, :address, NOW())";
             
             $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':user_id', $userId);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':phone', $phone);
             $stmt->bindParam(':address', $address);

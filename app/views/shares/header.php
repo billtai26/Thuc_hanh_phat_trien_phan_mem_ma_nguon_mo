@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sản phẩm</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">    
     <style>
         :root {
             --transition-speed: 0.3s;
@@ -13,6 +13,7 @@
 
         body {
             background-color: #f8f9fa;
+            padding-top: 0px;
         }
 
         .transition {
@@ -287,10 +288,14 @@
                     <a class="nav-link" href="/webbanhang/Product">
                         <i class="fas fa-box mr-1"></i>Sản phẩm
                     </a>
-                </li>
-                <li class="nav-item">
+                </li>                <li class="nav-item">
                     <a class="nav-link" href="/webbanhang/Category">
                         <i class="fas fa-tags mr-1"></i>Danh mục
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/webbanhang/Order">
+                        <i class="fas fa-history mr-1"></i>Lịch sử đơn hàng
                     </a>
                 </li>
             <?php endif; ?>
@@ -324,11 +329,10 @@
         </ul>
     </div>
 </nav>
-<div class="container mt-4">
-    <!-- Thêm padding-top để tránh nội dung bị che bởi navbar -->
-    <div style="padding-top: 70px;">
+<div class="container mt-4">    <!-- Thêm padding-top để tránh nội dung bị che bởi navbar -->
+    <div style="padding-top: 10px;">
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger">
+            <div class="alert alert-danger mb-0">
                 <?php 
                     echo $_SESSION['error'];
                     unset($_SESSION['error']);
@@ -337,7 +341,7 @@
         <?php endif; ?>
 
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert alert-success">
+            <div class="alert alert-success mb-0">
                 <?php 
                     echo $_SESSION['success'];
                     unset($_SESSION['success']);
