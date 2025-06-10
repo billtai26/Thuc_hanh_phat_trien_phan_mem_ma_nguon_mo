@@ -56,7 +56,8 @@
                                 <span class="badge badge-primary">
                                     <?php echo $category->product_count; ?> sản phẩm
                                 </span>
-                            </td>                            <td>
+                            </td>                            
+                            <td>
                                 <?php if (SessionHelper::isAdmin()): ?>
                                     <a href="/webbanhang/Category/edit/<?php echo $category->id; ?>" 
                                        class="btn btn-sm btn-outline-primary mr-2">

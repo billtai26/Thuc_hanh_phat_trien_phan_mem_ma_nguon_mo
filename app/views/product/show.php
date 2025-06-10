@@ -4,11 +4,11 @@
     <div class="row">
         <div class="col-md-5">
             <div class="card mb-4">
-                <?php if ($product->image): ?>
+                <?php if (!empty($product->image)): ?>
                     <div class="product-image-container" style="height: 400px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; padding: 20px;">
                         <img src="/webbanhang/<?php echo $product->image; ?>" 
                              class="img-fluid" 
-                             alt="<?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>"
+                             alt="<?php echo !empty($product->name) ? htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8') : ''; ?>"
                              style="max-height: 100%; object-fit: contain;">
                     </div>
                 <?php else: ?>
@@ -23,11 +23,15 @@
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb bg-white">
                     <li class="breadcrumb-item"><a href="/webbanhang/Product" class="text-primary">Danh sách sản phẩm</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <?php echo !empty($product->name) ? htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8') : 'Sản phẩm không tên'; ?>
+                    </li>
                 </ol>
             </nav>
 
-            <h1 class="mb-4"><?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?></h1>
+            <h1 class="mb-4">
+                <?php echo !empty($product->name) ? htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8') : 'Sản phẩm không tên'; ?>
+            </h1>
             
             <div class="card mb-4">
                 <div class="card-body">
@@ -38,14 +42,14 @@
                     <div class="mb-4">
                         <h5 class="text-muted mb-3">Thông tin chi tiết:</h5>
                         <p class="product-description">
-                            <?php echo nl2br(htmlspecialchars($product->description, ENT_QUOTES, 'UTF-8')); ?>
+                            <?php echo !empty($product->description) ? nl2br(htmlspecialchars($product->description, ENT_QUOTES, 'UTF-8')) : 'Chưa có mô tả'; ?>
                         </p>
                     </div>                    
                     <div class="mb-4">
                         <h5 class="text-muted mb-2">Danh mục:</h5>
                         <span class="badge badge-primary p-2">
                             <i class="fas fa-tag mr-1"></i>
-                            <?php echo htmlspecialchars($product->category_name, ENT_QUOTES, 'UTF-8'); ?>
+                            <?php echo !empty($product->category_name) ? htmlspecialchars($product->category_name, ENT_QUOTES, 'UTF-8') : 'Không có danh mục'; ?>
                         </span>
                     </div>
 
@@ -83,6 +87,7 @@
 </div>
 
 <style>
+
 .product-description {
     line-height: 1.8;
     color: #2c3e50;
